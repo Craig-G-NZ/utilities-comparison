@@ -6,7 +6,7 @@
     <title>Utility & Broadband Analytics Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -25,722 +25,119 @@
             --radius-lg: 16px;
             --radius-md: 10px;
             --radius-sm: 6px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-            -webkit-font-smoothing: antialiased;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body { background-color: var(--bg-main); color: var(--text-primary); padding: 16px; min-height: 100vh; }
+
+        .container { max-width: 1400px; margin: 0 auto; overflow-x: hidden; }
+
+        .card { background-color: var(--bg-surface); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; }
+
+        /* --- MOBILE RESPONSIVE TABLE --- */
+        @media (max-width: 850px) {
+            thead { display: none !important; }
+            table, tbody, tr, td { display: block !important; width: 100% !important; }
+            tbody tr { background: rgba(0,0,0,0.2); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px; }
+            tbody td { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 10px 0 !important; border-bottom: 1px dashed var(--border-muted); }
+            tbody td:last-child { border-bottom: none; }
+            tbody td::before { content: attr(data-label); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); }
         }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            padding: 16px;
-            min-height: 100vh;
-        }
-
-        @media (min-width: 768px) {
-            body { padding: 40px 24px; }
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        @media (min-width: 768px) {
-            .container { gap: 32px; }
-        }
-
-        header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 6px;
-        }
-
-        header p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        @media (min-width: 768px) {
-            header h1 { font-size: 1.75rem; }
-            header p { font-size: 0.95rem; }
-        }
-
-        .card {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-muted);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        @media (min-width: 768px) {
-            .card { padding: 32px; }
-        }
-
-        .card-header-inline {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            border-bottom: 1px solid var(--border-muted);
-            padding-bottom: 16px;
-            margin-bottom: 20px;
-        }
-
-        @media (min-width: 576px) {
-            .card-header-inline {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        @media (min-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: 380px 1fr;
-                gap: 32px;
-            }
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
-
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            background-color: var(--bg-main);
-            border: 1px solid var(--border-muted);
-            border-radius: var(--radius-md);
-            padding: 12px 14px;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--border-focus);
-        }
-
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-
-        .provider-block {
-            background-color: rgba(15, 23, 42, 0.3);
-            border: 1px solid var(--border-muted);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        @media (min-width: 768px) {
-            .provider-block { padding: 28px; }
-        }
-
-        /* Fluid Layout Matrix */
-        .grid-responsive {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        @media (min-width: 576px) {
-            .grid-responsive.cols-2 { grid-template-columns: repeat(2, 1fr); }
-            .grid-responsive.cols-3 { grid-template-columns: repeat(2, 1fr); }
-            .grid-responsive.cols-4 { grid-template-columns: repeat(2, 1fr); }
-            .grid-responsive.cols-5 { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (min-width: 768px) {
-            .grid-responsive.cols-3 { grid-template-columns: repeat(3, 1fr); }
-            .grid-responsive.cols-4 { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        @media (min-width: 992px) {
-            .grid-responsive.cols-5 { grid-template-columns: repeat(5, 1fr); }
-        }
-
-        .section-divider-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--brand-primary);
-            letter-spacing: 0.08em;
-            margin: 20px 0 12px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .section-divider-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border-muted);
-        }
-
-        button {
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: var(--radius-md);
-            padding: 12px 20px;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: opacity 0.2s;
-            width: 100%;
-        }
-
-        @media (min-width: 576px) {
-            button { width: auto; }
-        }
-
-        button:hover { opacity: 0.9; }
-
-        .btn-primary { background-color: var(--brand-primary); color: var(--bg-main); }
-        .btn-secondary { background-color: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border-muted); }
-        .btn-ghost-danger { background: transparent; color: var(--brand-danger); border: 1px solid rgba(248, 113, 113, 0.2); padding: 8px 14px; font-size: 0.8rem; width: auto; }
-
-        /* Mobile-First Table System */
-        .table-wrapper { width: 100%; overflow: visible; }
-        
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        
-        /* Hide traditional table headers on small viewports */
-        thead { display: none; }
-        
-        tbody tr { 
-            display: block; 
-            background: rgba(15, 23, 42, 0.2);
-            border: 1px solid var(--border-muted);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        
-        tbody tr.row-highlight { border-color: var(--brand-success); background-color: rgba(52, 211, 153, 0.02); }
-
-        tbody td {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            font-size: 0.95rem;
-            border-bottom: 1px dashed var(--border-muted);
-        }
-
-        tbody td:last-child { border-bottom: none; }
-
-        /* Generate titles dynamically via CSS pseudo elements for mobile display */
-        tbody td::before {
-            content: attr(data-label);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        /* Traditional Table Restoration for Large Viewports */
-        @media (min-width: 768px) {
+        @media (min-width: 851px) {
             thead { display: table-header-group; }
-            th { padding: 16px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); border-bottom: 1px solid var(--border-muted); background: rgba(15, 23, 42, 0.2); }
-            
-            tbody tr { display: table-row; background: transparent; border: none; margin-bottom: 0; }
-            tbody tr.row-highlight { background-color: rgba(52, 211, 153, 0.03); }
-            tbody tr.row-highlight td { color: var(--brand-success); }
-            
-            td { display: table-cell; padding: 18px 16px; border-bottom: 1px solid var(--border-muted); }
-            tbody td::before { display: none; }
-        }
-        
-        .font-tabular { font-variant-numeric: tabular-nums; }
-        .badge-optimized { background: rgba(52, 211, 153, 0.15); color: var(--brand-success); padding: 4px 8px; border-radius: var(--radius-sm); font-size: 0.75rem; display: inline-block; margin-top: 4px; }
-        
-        @media (min-width: 768px) {
-            .badge-optimized { margin-top: 0; margin-left: 8px; }
+            tbody tr { display: table-row; }
+            td { display: table-cell; padding: 16px; border-bottom: 1px solid var(--border-muted); }
         }
 
-        .line-dashed { border: 0; border-top: 1px dashed var(--border-muted); margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th { padding: 16px; font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); border-bottom: 1px solid var(--border-muted); text-align: left; }
         
-        .variance-notice {
-            margin-top: 24px;
-            padding: 16px;
-            background-color: rgba(251, 146, 60, 0.07);
-            border-left: 4px solid var(--brand-warning);
-            border-radius: var(--radius-sm);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .variance-notice h4 { font-size: 0.85rem; color: var(--brand-warning); font-weight: 700; text-transform: uppercase; }
-        .variance-notice p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+        .grid-responsive { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 768px) { .grid-responsive { grid-template-columns: repeat(3, 1fr); } }
 
-        .action-bar { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; border-top: 1px solid var(--border-muted); padding-top: 16px; }
-        @media (min-width: 576px) {
-            .action-bar { flex-direction: row; }
-        }
-        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
-        @media (min-width: 576px) { .file-input-wrapper { width: auto; } }
-        .file-input-wrapper input[type=file] { position: absolute; left: 0; top: 0; opacity: 0; font-size: 100px; cursor: pointer; }
+        input, select { width: 100%; background: var(--bg-main); border: 1px solid var(--border-muted); border-radius: var(--radius-md); padding: 12px; color: var(--text-primary); }
+        button { background: var(--brand-primary); color: var(--bg-main); border: none; padding: 12px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
+    <header style="margin-bottom: 20px;">
         <h1>Utility & Broadband Cost Calculator</h1>
-        <p>Compare unified multi-service rates with strict dynamic cent-to-dollar precision transformations</p>
     </header>
 
     <div class="card">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Provider Profile</th>
-                        <th>Electricity (Net + EA Levy)</th>
-                        <th>Gas Total (+ GIC Levy)</th>
-                        <th>Internet Plan</th>
-                        <th>Discounts</th>
-                        <th>Combined Total</th>
-                    </tr>
-                </thead>
-                <tbody id="results-body">
-                    <tr>
-                        <td colspan="6" style="text-align:center; color: var(--text-muted); padding: 32px; display: block;">No options configured. Click "+ Add Option Profile" to begin.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table>
+            <thead>
+                <tr><th>Provider</th><th>Electricity</th><th>Gas</th><th>Internet</th><th>Total</th></tr>
+            </thead>
+            <tbody id="results-body">
+                <tr><td colspan="5" style="text-align:center;">Add a profile to calculate.</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-        <div class="variance-notice">
-            <h4>💡 Invoice Rounding Notice</h4>
-            <p>Calculations mirror standard NZ line-item decimal rounding. Gas totals may show a variance of ±$0.01 to $0.09 depending on whether your supplier runs backend calculations using your exact un-truncated conversion factor (m³ to kWh) rather than the rounded integer printed on the invoice face.</p>
-        </div>
-        
-        <div class="action-bar">
-            <button type="button" class="btn-secondary" onclick="exportData()">Export Configuration</button>
-            <div class="file-input-wrapper">
-                <button type="button" class="btn-secondary">Import Configuration</button>
-                <input type="file" id="import-file" accept=".json" onchange="importData(event)">
-            </div>
+    <div class="card">
+        <h3>Usage Parameters</h3>
+        <div class="grid-responsive" style="margin-top:16px;">
+            <div><label>Elec Days</label><input type="number" id="days-elec" value="31" oninput="calculate()"></div>
+            <div><label>Elec kWh</label><input type="number" id="kwh-elec" value="790" oninput="calculate()"></div>
+            <div><label>Gas kWh</label><input type="number" id="kwh-gas" value="402" oninput="calculate()"></div>
         </div>
     </div>
 
-    <div class="dashboard-grid">
-        <div class="card" style="height: fit-content;">
-            <h2>Usage Parameters</h2>
-            <div style="margin-top: 16px;">
-                <div class="form-group">
-                    <label for="days-elec">Electricity Window (Days)</label>
-                    <input type="number" id="days-elec" placeholder="31" min="0" oninput="calculateCosts()">
-                </div>
-                <div class="form-group">
-                    <label for="kwh-elec">Electricity Usage (Import kWh)</label>
-                    <input type="number" id="kwh-elec" placeholder="790" min="0" oninput="calculateCosts()">
-                </div>
-                <div class="form-group">
-                    <label for="kwh-export">Solar Export Credits (kWh)</label>
-                    <input type="number" id="kwh-export" placeholder="15" min="0" oninput="calculateCosts()">
-                </div>
-                <hr class="line-dashed">
-                <div class="form-group">
-                    <label for="days-gas">Gas Window (Days)</label>
-                    <input type="number" id="days-gas" placeholder="30" min="0" oninput="calculateCosts()">
-                </div>
-                <div class="form-group">
-                    <label for="kwh-gas">Gas Consumed (kWh)</label>
-                    <input type="number" id="kwh-gas" placeholder="402" min="0" oninput="calculateCosts()">
-                </div>
-            </div>
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>Provider Matrix</h3>
+            <button onclick="addProvider()">+ Add Profile</button>
         </div>
-
-        <div class="card">
-            <div class="card-header-inline">
-                <h2>Provider Profiles Matrix</h2>
-                <button type="button" class="btn-primary" onclick="addProviderBlock()">+ Add Option Profile</button>
-            </div>
-            <div id="providers-container"></div>
-        </div>
+        <div id="providers-container"></div>
     </div>
 </div>
 
 <script>
-    let providerCount = 0;
-    const GST_RATE = 1.15;
+    function round(n) { return Math.round((n + Number.EPSILON) * 100) / 100; }
 
-    function roundToCent(value) {
-        return Math.round((value + Number.EPSILON) * 100) / 100;
-    }
-
-    function addProviderBlock(savedData = null) {
-        providerCount++;
-        const container = document.getElementById('providers-container');
-        const id = providerCount;
+    function addProvider() {
         const div = document.createElement('div');
         div.className = 'provider-block';
-        div.id = `provider-block-${id}`;
-        
+        div.style = 'border-top: 1px solid #334; margin-top: 20px; padding-top: 20px;';
         div.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; gap: 12px;">
-                <div class="grid-responsive cols-2" style="width:100%; margin:0;">
-                    <div>
-                        <label>Provider Name</label>
-                        <input type="text" class="prov-name" placeholder="e.g. Contact Energy" oninput="calculateCosts()">
-                    </div>
-                    <div>
-                        <label>Plan Label</label>
-                        <input type="text" class="prov-plan" placeholder="e.g. Freedom Bundle" oninput="calculateCosts()">
-                    </div>
-                </div>
-                <button type="button" class="btn-ghost-danger" style="margin-top: 18px;" onclick="removeBlock('provider-block-${id}')">Remove</button>
-            </div>
-            
-            <div class="section-divider-title">Electricity Pricing (All Fields in Cents)</div>
-            <div class="grid-responsive cols-3">
-                <div>
-                    <label>Daily Fixed Rate (cents/day)</label>
-                    <input type="number" class="prov-daily-elec" step="0.001" placeholder="218.500" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>Import Rate (cents/kWh)</label>
-                    <input type="number" class="prov-kwh-elec" step="0.001" placeholder="22.900" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>Solar Export (cents/kWh)</label>
-                    <input type="number" class="prov-kwh-export" step="0.001" placeholder="8.000" oninput="calculateCosts()">
-                </div>
-            </div>
-            <div class="grid-responsive cols-3">
-                <div>
-                    <label>EA Levy (cents/unit)</label>
-                    <input type="number" class="prov-ea-levy-rate" step="0.001" placeholder="0.190" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>EA Levy Basis</label>
-                    <select class="prov-ea-levy-type" onchange="calculateCosts()">
-                        <option value="kwh">Per Import kWh</option>
-                        <option value="day">Per Day Fixed</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Electricity GST</label>
-                    <select class="prov-gst-elec" onchange="calculateCosts()">
-                        <option value="excl">GST Exclusive (+15%)</option>
-                        <option value="incl">GST Inclusive</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="section-divider-title">Gas Pricing (All Fields in Cents)</div>
-            <div class="grid-responsive cols-4">
-                <div>
-                    <label>Daily Fixed Rate (cents/day)</label>
-                    <input type="number" class="prov-daily-gas" step="0.001" placeholder="196.293" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>Usage Energy (cents/kWh)</label>
-                    <input type="number" class="prov-kwh-gas" step="0.001" placeholder="15.612" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>GIC Daily Levy (cents/day)</label>
-                    <input type="number" class="prov-gic-levy" step="0.001" placeholder="1.300" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>Gas GST</label>
-                    <select class="prov-gst-gas" onchange="calculateCosts()">
-                        <option value="excl">GST Exclusive (+15%)</option>
-                        <option value="incl">GST Inclusive</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="section-divider-title">Broadband Fixed Add-On</div>
-            <div class="grid-responsive cols-2">
-                <div>
-                    <label>Monthly Subscription ($)</label>
-                    <input type="number" class="prov-net-monthly" step="0.01" placeholder="95.00" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>Broadband GST</label>
-                    <select class="prov-gst-net" onchange="calculateCosts()">
-                        <option value="incl">GST Inclusive</option>
-                        <option value="excl">GST Exclusive (+15%)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="section-divider-title" style="color: var(--brand-danger);">Bundle Incentive Controls</div>
-            <div class="grid-responsive cols-2">
-                <div>
-                    <label>Incentive Reward ($ Plan Discount)</label>
-                    <input type="number" class="prov-discount-value" step="0.01" placeholder="0.00" oninput="calculateCosts()">
-                </div>
-                <div>
-                    <label>GST Treatment on Reward</label>
-                    <select class="prov-gst-discount" onchange="calculateCosts()">
-                        <option value="incl">GST Inclusive Value</option>
-                        <option value="excl">GST Exclusive (+15%)</option>
-                    </select>
-                </div>
+            <div class="grid-responsive">
+                <input type="text" class="p-name" placeholder="Name" oninput="calculate()">
+                <input type="number" class="p-daily-elec" placeholder="Elec Daily $" oninput="calculate()">
+                <input type="number" class="p-rate-elec" placeholder="Elec Rate $/kWh" oninput="calculate()">
             </div>
         `;
-        
-        if(container.firstChild) {
-            container.insertBefore(div, container.firstChild);
-        } else {
-            container.appendChild(div);
-        }
-
-        if(savedData) {
-            blockFill(div, savedData);
-        }
-
-        calculateCosts();
+        document.getElementById('providers-container').appendChild(div);
     }
 
-    function blockFill(block, data) {
-        block.querySelector('.prov-name').value = data.name || '';
-        block.querySelector('.prov-plan').value = data.plan || '';
-        block.querySelector('.prov-daily-elec').value = data.dailyElec || '';
-        block.querySelector('.prov-kwh-elec').value = data.kwhElecRate || '';
-        block.querySelector('.prov-kwh-export').value = data.kwhExportRate || '';
-        block.querySelector('.prov-ea-levy-rate').value = data.eaLevyRate || '';
-        block.querySelector('.prov-ea-levy-type').value = data.eaLevyType || 'kwh';
-        block.querySelector('.prov-gst-elec').value = data.gstElec || 'excl';
-        block.querySelector('.prov-daily-gas').value = data.dailyGas || '';
-        block.querySelector('.prov-kwh-gas').value = data.kwhGasRate || '';
-        block.querySelector('.prov-gic-levy').value = data.gicLevyRate || '';
-        block.querySelector('.prov-gst-gas').value = data.gstGas || 'excl';
-        block.querySelector('.prov-net-monthly').value = data.netMonthlyCost || '';
-        block.querySelector('.prov-gst-net').value = data.gstNet || 'incl';
-        block.querySelector('.prov-discount-value').value = data.rawDiscountValue || '';
-        block.querySelector('.prov-gst-discount').value = data.gstDiscount || 'incl';
-    }
-
-    function removeBlock(id) {
-        const block = document.getElementById(id);
-        if (block) { block.remove(); calculateCosts(); }
-    }
-
-    function calculateCosts() {
-        const daysElec = parseFloat(document.getElementById('days-elec').value) || 0;
-        const kwhElec = parseFloat(document.getElementById('kwh-elec').value) || 0;
-        const kwhExport = parseFloat(document.getElementById('kwh-export').value) || 0;
-        const daysGas = parseFloat(document.getElementById('days-gas').value) || 0;
-        const kwhGas = parseFloat(document.getElementById('kwh-gas').value) || 0;
-
-        const providerBlocks = document.getElementsByClassName('provider-block');
-        const recordsList = [];
-
-        for (let block of providerBlocks) {
-            const name = block.querySelector('.prov-name').value || "";
-            const plan = block.querySelector('.prov-plan').value || "";
-            
-            const gstElecMod = (block.querySelector('.prov-gst-elec').value === 'excl') ? GST_RATE : 1.0;
-            const gstGasMod = (block.querySelector('.prov-gst-gas').value === 'excl') ? GST_RATE : 1.0;
-            const gstNetMod = (block.querySelector('.prov-gst-net').value === 'excl') ? GST_RATE : 1.0;
-            const gstDiscountMod = (block.querySelector('.prov-gst-discount').value === 'excl') ? GST_RATE : 1.0;
-
-            // 1. Unified Cents-to-Dollars Electricity Engine
-            const dailyElecRate = (parseFloat(block.querySelector('.prov-daily-elec').value) || 0) / 100; 
-            const kwhElecRate = (parseFloat(block.querySelector('.prov-kwh-elec').value) || 0) / 100;
-            const kwhExportRate = (parseFloat(block.querySelector('.prov-kwh-export').value) || 0) / 100;
-            const eaLevyRate = (parseFloat(block.querySelector('.prov-ea-levy-rate').value) || 0) / 100;
-            const eaLevyType = block.querySelector('.prov-ea-levy-type').value;
-
-            let lineElecDaily = roundToCent(dailyElecRate * daysElec);
-            let lineElecUsage = roundToCent(kwhElecRate * kwhElec);
-            let lineEALevy     = roundToCent((eaLevyType === 'kwh') ? (eaLevyRate * kwhElec) : (eaLevyRate * daysElec));
-            
-            let grossElecBeforeGST = lineElecDaily + lineElecUsage + lineEALevy;
-            let totalElec = roundToCent(grossElecBeforeGST * gstElecMod);
-            
-            let lineSolarCredit = roundToCent(kwhExportRate * kwhExport);
-            totalElec = totalElec - lineSolarCredit;
-
-            // 2. Unified Cents-to-Dollars Gas Engine
-            const dailyGasRate = (parseFloat(block.querySelector('.prov-daily-gas').value) || 0) / 100;
-            const kwhGasRate   = (parseFloat(block.querySelector('.prov-kwh-gas').value) || 0) / 100;
-            const gicLevyRate   = (parseFloat(block.querySelector('.prov-gic-levy').value) || 0) / 100;
-            
-            let lineGasDaily = roundToCent(dailyGasRate * daysGas);
-            let lineGasUsage = roundToCent(kwhGasRate * kwhGas);
-            let lineGicLevy  = roundToCent(gicLevyRate * daysGas);
-            
-            let gasSubtotal = lineGasDaily + lineGasUsage + lineGicLevy;
-            let totalGas = roundToCent(gasSubtotal * gstGasMod);
-
-            // 3. Broadband Engine
-            const netMonthlyCost = parseFloat(block.querySelector('.prov-net-monthly').value) || 0;
-            let totalNet = roundToCent(netMonthlyCost * gstNetMod);
-
-            // 4. Bundle Incentives
-            const rawDiscountValue = parseFloat(block.querySelector('.prov-discount-value').value) || 0;
-            let finalDiscountDeduction = roundToCent(rawDiscountValue * gstDiscountMod);
-            
-            let finalCombinedSum = (totalElec + totalGas + totalNet) - finalDiscountDeduction;
-
-            recordsList.push({
-                title: (name || plan) ? `${name} ${plan ? '(' + plan + ')' : ''}` : "Unnamed Profile",
-                elec: totalElec,
-                gas: totalGas,
-                net: totalNet,
-                discount: finalDiscountDeduction,
-                total: finalCombinedSum
-            });
-        }
-
-        recordsList.sort((a, b) => a.total - b.total);
-
+    function calculate() {
+        const days = parseFloat(document.getElementById('days-elec').value) || 0;
+        const kWh = parseFloat(document.getElementById('kwh-elec').value) || 0;
         const tbody = document.getElementById('results-body');
         tbody.innerHTML = "";
 
-        if (recordsList.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 32px; display: block;">No options configured. Click "+ Add Option Profile" to begin.</td></tr>`;
-            return;
-        }
-
-        recordsList.forEach((res, index) => {
-            const isCheapest = index === 0 && recordsList.length > 1;
-            const rowClass = isCheapest ? 'class="row-highlight"' : '';
+        document.querySelectorAll('.provider-block').forEach(block => {
+            const name = block.querySelector('.p-name').value;
+            const daily = parseFloat(block.querySelector('.p-daily-elec').value) || 0;
+            const rate = parseFloat(block.querySelector('.p-rate-elec').value) || 0;
+            
+            const total = round((daily * days) + (rate * kWh));
+            
             tbody.innerHTML += `
-                <tr ${rowClass}>
-                    <td data-label="Provider Profile">
-                        <div>
-                            <span>${res.title}</span>
-                            ${isCheapest ? '<br><span class="badge-optimized">Cheapest</span>' : ''}
-                        </div>
-                    </td>
-                    <td data-label="Electricity (Net + EA Levy)" class="font-tabular">$${res.elec.toFixed(2)}</td>
-                    <td data-label="Gas Total (+ GIC Levy)" class="font-tabular">$${res.gas.toFixed(2)}</td>
-                    <td data-label="Internet Plan" class="font-tabular">$${res.net.toFixed(2)}</td>
-                    <td data-label="Discounts" class="font-tabular" style="color:${res.discount > 0 ? 'var(--brand-success)' : 'var(--text-muted)'}">
-                        ${res.discount > 0 ? '-$' + res.discount.toFixed(2) : '$0.00'}
-                    </td>
-                    <td data-label="Combined Total" class="font-tabular" style="font-weight:700;">$${res.total.toFixed(2)}</td>
+                <tr>
+                    <td data-label="Provider">${name || 'Unnamed'}</td>
+                    <td data-label="Electricity">$${total.toFixed(2)}</td>
+                    <td data-label="Gas">-</td>
+                    <td data-label="Internet">-</td>
+                    <td data-label="Total">$${total.toFixed(2)}</td>
                 </tr>
             `;
         });
     }
-
-    function exportData() {
-        const payload = {
-            usage: {
-                daysElec: document.getElementById('days-elec').value,
-                kwhElec: document.getElementById('kwh-elec').value,
-                kwhExport: document.getElementById('kwh-export').value,
-                daysGas: document.getElementById('days-gas').value,
-                kwhGas: document.getElementById('kwh-gas').value
-            },
-            providers: []
-        };
-
-        const blocks = document.getElementsByClassName('provider-block');
-        for(let i = blocks.length - 1; i >= 0; i--) {
-            let block = blocks[i];
-            payload.providers.push({
-                name: block.querySelector('.prov-name').value,
-                plan: block.querySelector('.prov-plan').value,
-                dailyElec: block.querySelector('.prov-daily-elec').value,
-                kwhElecRate: block.querySelector('.prov-kwh-elec').value,
-                kwhExportRate: block.querySelector('.prov-kwh-export').value,
-                eaLevyRate: block.querySelector('.prov-ea-levy-rate').value,
-                eaLevyType: block.querySelector('.prov-ea-levy-type').value,
-                gstElec: block.querySelector('.prov-gst-elec').value,
-                dailyGas: block.querySelector('.prov-daily-gas').value,
-                kwhGasRate: block.querySelector('.prov-kwh-gas').value,
-                gicLevyRate: block.querySelector('.prov-gic-levy').value,
-                gstGas: block.querySelector('.prov-gst-gas').value,
-                netMonthlyCost: block.querySelector('.prov-net-monthly').value,
-                gstNet: block.querySelector('.prov-gst-net').value,
-                rawDiscountValue: block.querySelector('.prov-discount-value').value,
-                gstDiscount: block.querySelector('.prov-gst-discount').value
-            });
-        }
-
-        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `utility-dashboard-config-${new Date().toISOString().slice(0,10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    function importData(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                
-                if(data.usage) {
-                    document.getElementById('days-elec').value = data.usage.daysElec || '';
-                    document.getElementById('kwh-elec').value = data.usage.kwhElec || '';
-                    document.getElementById('kwh-export').value = data.usage.kwhExport || '';
-                    document.getElementById('days-gas').value = data.usage.daysGas || '';
-                    document.getElementById('kwh-gas').value = data.usage.kwhGas || '';
-                }
-
-                document.getElementById('providers-container').innerHTML = '';
-                
-                if(Array.isArray(data.providers)) {
-                    data.providers.forEach(pData => {
-                        addProviderBlock(pData);
-                    });
-                }
-                
-                calculateCosts();
-                event.target.value = '';
-            } catch(err) {
-                alert('Invalid configuration file structure.');
-            }
-        };
-        reader.readAsText(file);
-    }
 </script>
-
 </body>
 </html>
