@@ -118,15 +118,15 @@ function providerTemplate(id) {
       </div>
     </div>
 
-    <p class="form-section-title">Broadband</p>
-    <p class="form-section-blurb">Flat monthly plan cost in dollars — bundled fibre, or $0 if this comparison is power/gas only.</p>
+    <p class="form-section-title">Broadband override</p>
+    <p class="form-section-blurb">Optional. Leave blank to use the monthly internet cost from Your usage. Enter a value to use this plan’s bundled price instead ($0 for power/gas only).</p>
     <div class="form-row form-row--2">
       <div class="form-field">
         <label>
           Monthly fee ($)
           <span class="field-hint">Advertised plan price per month</span>
         </label>
-        <input type="number" class="prov-net-monthly" step="0.01" placeholder="e.g. 89" data-calc>
+        <input type="number" class="prov-net-monthly" step="0.01" placeholder="Uses usage internet" data-calc>
       </div>
       <div class="form-field">
         <label>
@@ -214,12 +214,24 @@ function removeBlock(id) {
   }
 }
 
+function resolveBroadbandCost(planNetInput, planGstNet, usageNetMonthly, usageGstNetMod) {
+  if (planNetInput !== "") {
+    const planNet = parseFloat(planNetInput) || 0;
+    const planGstMod = planGstNet === "excl" ? GST_RATE : 1.0;
+    return roundToCent(planNet * planGstMod);
+  }
+  return roundToCent(usageNetMonthly * usageGstNetMod);
+}
+
 function calculateCosts() {
   const daysElec = parseFloat(document.getElementById("days-elec").value) || 0;
   const kwhElec = parseFloat(document.getElementById("kwh-elec").value) || 0;
   const kwhExport = parseFloat(document.getElementById("kwh-export").value) || 0;
   const daysGas = parseFloat(document.getElementById("days-gas").value) || 0;
   const kwhGas = parseFloat(document.getElementById("kwh-gas").value) || 0;
+  const usageNetMonthly = parseFloat(document.getElementById("net-monthly-usage").value) || 0;
+  const usageGstNetMod =
+    document.getElementById("gst-net-usage").value === "excl" ? GST_RATE : 1.0;
 
   const providerBlocks = document.getElementsByClassName("provider-card");
   const recordsList = [];
@@ -230,7 +242,6 @@ function calculateCosts() {
 
     const gstElecMod = block.querySelector(".prov-gst-elec").value === "excl" ? GST_RATE : 1.0;
     const gstGasMod = block.querySelector(".prov-gst-gas").value === "excl" ? GST_RATE : 1.0;
-    const gstNetMod = block.querySelector(".prov-gst-net").value === "excl" ? GST_RATE : 1.0;
     const gstDiscountMod = block.querySelector(".prov-gst-discount").value === "excl" ? GST_RATE : 1.0;
 
     const dailyElecRate = (parseFloat(block.querySelector(".prov-daily-elec").value) || 0) / 100;
@@ -258,8 +269,14 @@ function calculateCosts() {
     const gasSubtotal = lineGasDaily + lineGasUsage + lineGicLevy;
     const totalGas = roundToCent(gasSubtotal * gstGasMod);
 
-    const netMonthlyCost = parseFloat(block.querySelector(".prov-net-monthly").value) || 0;
-    const totalNet = roundToCent(netMonthlyCost * gstNetMod);
+    const planNetInput = block.querySelector(".prov-net-monthly").value;
+    const planGstNet = block.querySelector(".prov-gst-net").value;
+    const totalNet = resolveBroadbandCost(
+      planNetInput,
+      planGstNet,
+      usageNetMonthly,
+      usageGstNetMod
+    );
 
     const rawDiscountValue = parseFloat(block.querySelector(".prov-discount-value").value) || 0;
     const finalDiscountDeduction = roundToCent(rawDiscountValue * gstDiscountMod);
@@ -348,6 +365,8 @@ function exportData() {
       kwhExport: document.getElementById("kwh-export").value,
       daysGas: document.getElementById("days-gas").value,
       kwhGas: document.getElementById("kwh-gas").value,
+      netMonthly: document.getElementById("net-monthly-usage").value,
+      gstNet: document.getElementById("gst-net-usage").value,
     },
     providers: [],
   };
@@ -401,6 +420,8 @@ function importData(event) {
         document.getElementById("kwh-export").value = data.usage.kwhExport || "";
         document.getElementById("days-gas").value = data.usage.daysGas || "";
         document.getElementById("kwh-gas").value = data.usage.kwhGas || "";
+        document.getElementById("net-monthly-usage").value = data.usage.netMonthly || "";
+        document.getElementById("gst-net-usage").value = data.usage.gstNet || "incl";
       }
 
       document.getElementById("providers-container").innerHTML = "";
@@ -426,13 +447,21 @@ function init() {
   document.getElementById("import-file").addEventListener("change", importData);
 
   document.addEventListener("input", (e) => {
-    if (e.target.matches("[data-calc], #days-elec, #kwh-elec, #kwh-export, #days-gas, #kwh-gas")) {
+    if (
+      e.target.matches(
+        "[data-calc], #days-elec, #kwh-elec, #kwh-export, #days-gas, #kwh-gas, #net-monthly-usage, #gst-net-usage"
+      )
+    ) {
       calculateCosts();
     }
   });
 
   document.addEventListener("change", (e) => {
-    if (e.target.matches("[data-calc], #days-elec, #kwh-elec, #kwh-export, #days-gas, #kwh-gas")) {
+    if (
+      e.target.matches(
+        "[data-calc], #days-elec, #kwh-elec, #kwh-export, #days-gas, #kwh-gas, #net-monthly-usage, #gst-net-usage"
+      )
+    ) {
       calculateCosts();
     }
   });

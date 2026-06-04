@@ -76,8 +76,9 @@
             <div>
               <h3 class="panel__title" id="results-heading">Comparison results</h3>
               <p class="panel__subtitle">
-                One row per plan. Electricity and gas use your usage inputs; broadband is the
-                monthly plan fee. The top row is the best price when you have two or more plans.
+                One row per plan. Electricity and gas use your usage inputs; broadband uses your
+                monthly internet cost (or a plan-specific fee if entered). The top row is the best
+                price when you have two or more plans.
               </p>
             </div>
           </div>
@@ -131,8 +132,8 @@
           <aside class="usage-panel" aria-labelledby="usage-heading">
             <h3 class="usage-panel__title" id="usage-heading">Your usage</h3>
             <p class="usage-panel__lead">
-              Copy these from your latest electricity and gas invoices — billing period length and
-              kWh used. Solar export is optional. Broadband is set per plan, not here.
+              Copy electricity and gas from your latest invoices. Add your monthly internet bill
+              here — it applies to every plan unless a plan sets its own bundled broadband price.
             </p>
             <div class="form-stack">
               <p class="form-section-title">Electricity</p>
@@ -173,6 +174,25 @@
                 </label>
                 <input type="number" id="kwh-gas" placeholder="e.g. 1200" min="0" data-calc />
               </div>
+              <hr class="form-divider" />
+              <p class="form-section-title">Internet</p>
+              <div class="form-field">
+                <label for="net-monthly-usage">
+                  Monthly cost ($)
+                  <span class="field-hint">What you pay for broadband this month</span>
+                </label>
+                <input type="number" id="net-monthly-usage" placeholder="e.g. 89" min="0" step="0.01" data-calc />
+              </div>
+              <div class="form-field">
+                <label for="gst-net-usage">
+                  Internet GST
+                  <span class="field-hint">Whether the amount above includes 15% GST</span>
+                </label>
+                <select id="gst-net-usage" data-calc>
+                  <option value="incl">Inclusive — price includes GST</option>
+                  <option value="excl">Exclusive — add 15%</option>
+                </select>
+              </div>
             </div>
           </aside>
 
@@ -182,8 +202,8 @@
                 <h3 class="panel__title" id="providers-heading">Plans to compare</h3>
                 <p class="panel__subtitle">
                   Add one card per retailer or bundle. Copy unit rates from their price fact sheet
-                  or bill — electricity and gas in <strong>cents</strong>, broadband in
-                  <strong>dollars</strong>. Remove a card anytime with
+                  or bill — electricity and gas in <strong>cents</strong>. Optional per-plan
+                  broadband overrides your usage internet cost. Remove a card anytime with
                   <strong>Remove this plan</strong>.
                 </p>
               </div>
