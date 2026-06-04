@@ -307,6 +307,48 @@ body::before {
   font-size: 0.9rem;
   color: var(--ink-muted);
   margin-top: var(--space-1);
+  max-width: 42rem;
+  line-height: 1.5;
+}
+
+.usage-panel__lead,
+.section-blurb {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  margin-bottom: var(--space-4);
+}
+
+.form-section-blurb {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  line-height: 1.45;
+  margin: calc(-1 * var(--space-2)) 0 var(--space-4);
+}
+
+.field-hint {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+.stat-card__hint {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: 0.72rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-faint);
+  line-height: 1.35;
+}
+
+.config-note {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  max-width: 36rem;
 }
 
 /* Stats */
@@ -460,8 +502,14 @@ body::before {
 .action-bar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-3);
   padding-top: var(--space-2);
+}
+
+.action-bar .config-note {
+  flex: 1 1 100%;
+  margin-bottom: var(--space-1);
 }
 
 .file-input-wrapper {
@@ -565,6 +613,9 @@ body::before {
 }
 
 .form-field label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--ink);

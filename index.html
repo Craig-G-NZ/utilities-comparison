@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
     />
     <meta name="theme-color" content="#0b1220" />
-    <title>Utilities Comparison</title>
+    <title>Utilities comparison</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,14 +30,14 @@
               </svg>
             </div>
             <div class="site-brand__text">
-              <p class="site-eyebrow">NZ household utilities</p>
-              <h1 class="site-title">Utilities Comparison</h1>
+              <p class="site-eyebrow">Gas, power &amp; broadband</p>
+              <h1 class="site-title">Utilities comparison</h1>
             </div>
           </div>
           <div class="site-header__actions">
             <button type="button" class="btn btn--primary" id="add-provider-btn">
               <span class="btn-icon" aria-hidden="true">+</span>
-              Add provider
+              Add plan
             </button>
           </div>
         </div>
@@ -45,45 +45,61 @@
 
       <main class="page">
         <div class="page-header">
-          <h2 class="page-title">Compare plans side by side</h2>
+          <h2 class="page-title">Find the cheapest combined deal</h2>
           <p class="page-lead">
-            Enter your usage and provider rates to see electricity, gas, and broadband totals ranked
-            cheapest first — with cent-to-dollar precision matching NZ invoice rounding.
+            Enter usage from your latest bills, then add each retailer plan you want to test.
+            Totals update as you type and are ranked cheapest first — electricity, gas, and
+            broadband on the same billing period.
           </p>
         </div>
 
-        <div id="stats-bar" class="stats-grid" hidden aria-label="Summary">
+        <div id="stats-bar" class="stats-grid" hidden aria-label="At-a-glance summary">
           <div class="stat-card stat-card--accent">
             <span class="stat-card__value" id="stat-cheapest">$0.00</span>
-            <span class="stat-card__label">Cheapest total</span>
+            <span class="stat-card__label">Lowest combined cost</span>
+            <span class="stat-card__hint">Cheapest plan for your entered usage</span>
           </div>
           <div class="stat-card">
             <span class="stat-card__value" id="stat-providers">0</span>
-            <span class="stat-card__label">Providers</span>
+            <span class="stat-card__label">Plans compared</span>
+            <span class="stat-card__hint">How many retailer options you’ve added</span>
           </div>
           <div class="stat-card">
             <span class="stat-card__value" id="stat-spread">—</span>
-            <span class="stat-card__label">Price spread</span>
+            <span class="stat-card__label">Gap to most expensive</span>
+            <span class="stat-card__hint">Savings between best and worst plan</span>
           </div>
         </div>
 
-        <section class="panel" aria-label="Comparison results">
+        <section class="panel" aria-labelledby="results-heading">
+          <div class="panel__header">
+            <div>
+              <h3 class="panel__title" id="results-heading">Comparison results</h3>
+              <p class="panel__subtitle">
+                One row per plan. Electricity and gas use your usage inputs; broadband is the
+                monthly plan fee. The top row is the best price when you have two or more plans.
+              </p>
+            </div>
+          </div>
+
           <div class="table-scroll">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Provider</th>
-                  <th>Electricity</th>
-                  <th>Gas</th>
-                  <th>Broadband</th>
-                  <th>Discounts</th>
-                  <th>Combined</th>
+                  <th scope="col">Plan</th>
+                  <th scope="col">Electricity</th>
+                  <th scope="col">Gas</th>
+                  <th scope="col">Broadband</th>
+                  <th scope="col">Bundle discount</th>
+                  <th scope="col">Total</th>
                 </tr>
               </thead>
               <tbody id="results-body">
                 <tr>
                   <td colspan="6" class="empty-state-cell">
-                    No options configured. Click “Add provider” to begin.
+                    <strong>No plans yet.</strong> Add your usage below, then click
+                    <strong>Add plan</strong> to enter a retailer’s rates. Results appear here
+                    automatically.
                   </td>
                 </tr>
               </tbody>
@@ -91,56 +107,85 @@
           </div>
 
           <aside class="callout">
-            <h3 class="callout__title">Invoice rounding notice</h3>
+            <h3 class="callout__title">Totals may differ slightly from your bill</h3>
             <p class="callout__text">
-              Calculations mirror standard NZ line-item decimal rounding. Gas totals may vary by
-              ±$0.01–$0.09 if your supplier uses an un-truncated m³→kWh conversion factor rather than
-              the rounded value on the invoice.
+              We round each line the way NZ invoices usually do. Gas can be out by a few cents if
+              your retailer calculates m³→kWh with more decimal places than printed on the bill.
             </p>
           </aside>
 
-          <div class="action-bar">
-            <button type="button" class="btn btn--secondary" id="export-btn">Export configuration</button>
+          <div class="action-bar" aria-labelledby="config-heading">
+            <p id="config-heading" class="config-note">
+              <strong>Save your setup</strong> — export downloads a JSON file with your usage and
+              all plans. Import brings it back later without retyping.
+            </p>
+            <button type="button" class="btn btn--secondary" id="export-btn">Export saved setup</button>
             <div class="file-input-wrapper">
-              <button type="button" class="btn btn--secondary">Import configuration</button>
-              <input type="file" id="import-file" accept=".json" />
+              <button type="button" class="btn btn--secondary">Import saved setup</button>
+              <input type="file" id="import-file" accept=".json" aria-label="Import saved setup JSON file" />
             </div>
           </div>
         </section>
 
         <div class="layout-grid">
-          <aside class="usage-panel" aria-label="Usage parameters">
-            <h3 class="usage-panel__title">Usage parameters</h3>
+          <aside class="usage-panel" aria-labelledby="usage-heading">
+            <h3 class="usage-panel__title" id="usage-heading">Your usage</h3>
+            <p class="usage-panel__lead">
+              Copy these from your latest electricity and gas invoices — billing period length and
+              kWh used. Solar export is optional. Broadband is set per plan, not here.
+            </p>
             <div class="form-stack">
+              <p class="form-section-title">Electricity</p>
               <div class="form-field">
-                <label for="days-elec">Electricity window (days)</label>
-                <input type="number" id="days-elec" placeholder="0" min="0" data-calc />
+                <label for="days-elec">
+                  Billing period (days)
+                  <span class="field-hint">Days covered on the power bill</span>
+                </label>
+                <input type="number" id="days-elec" placeholder="e.g. 30" min="0" data-calc />
               </div>
               <div class="form-field">
-                <label for="kwh-elec">Electricity usage (import kWh)</label>
-                <input type="number" id="kwh-elec" placeholder="0" min="0" data-calc />
+                <label for="kwh-elec">
+                  Power imported (kWh)
+                  <span class="field-hint">Grid electricity you bought in that period</span>
+                </label>
+                <input type="number" id="kwh-elec" placeholder="e.g. 450" min="0" data-calc />
               </div>
               <div class="form-field">
-                <label for="kwh-export">Solar export credits (kWh)</label>
+                <label for="kwh-export">
+                  Solar exported (kWh)
+                  <span class="field-hint">Leave at 0 if you don’t export to the grid</span>
+                </label>
                 <input type="number" id="kwh-export" placeholder="0" min="0" data-calc />
               </div>
               <hr class="form-divider" />
+              <p class="form-section-title">Gas</p>
               <div class="form-field">
-                <label for="days-gas">Gas window (days)</label>
-                <input type="number" id="days-gas" placeholder="0" min="0" data-calc />
+                <label for="days-gas">
+                  Billing period (days)
+                  <span class="field-hint">Days covered on the gas bill (can differ from power)</span>
+                </label>
+                <input type="number" id="days-gas" placeholder="e.g. 30" min="0" data-calc />
               </div>
               <div class="form-field">
-                <label for="kwh-gas">Gas consumed (kWh)</label>
-                <input type="number" id="kwh-gas" placeholder="0" min="0" data-calc />
+                <label for="kwh-gas">
+                  Gas used (kWh)
+                  <span class="field-hint">Energy charge kWh from the invoice, not m³</span>
+                </label>
+                <input type="number" id="kwh-gas" placeholder="e.g. 1200" min="0" data-calc />
               </div>
             </div>
           </aside>
 
-          <section class="panel" aria-label="Provider profiles">
+          <section class="panel" aria-labelledby="providers-heading">
             <div class="panel__header">
               <div>
-                <h3 class="panel__title">Provider profiles</h3>
-                <p class="panel__subtitle">Configure rates for each retailer and plan you want to compare.</p>
+                <h3 class="panel__title" id="providers-heading">Plans to compare</h3>
+                <p class="panel__subtitle">
+                  Add one card per retailer or bundle. Copy unit rates from their price fact sheet
+                  or bill — electricity and gas in <strong>cents</strong>, broadband in
+                  <strong>dollars</strong>. Remove a card anytime with
+                  <strong>Remove this plan</strong>.
+                </p>
               </div>
             </div>
             <div id="providers-container" class="providers-list"></div>

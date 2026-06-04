@@ -10,102 +10,154 @@ function providerTemplate(id) {
     <div class="provider-card__header">
       <div class="form-row form-row--2">
         <div class="form-field">
-          <label>Provider name</label>
+          <label>
+            Retailer
+            <span class="field-hint">Who supplies this option</span>
+          </label>
           <input type="text" class="prov-name" placeholder="e.g. Contact Energy" data-calc>
         </div>
         <div class="form-field">
-          <label>Plan label</label>
+          <label>
+            Plan name
+            <span class="field-hint">Helps tell similar deals apart in the table</span>
+          </label>
           <input type="text" class="prov-plan" placeholder="e.g. Freedom Bundle" data-calc>
         </div>
       </div>
-      <button type="button" class="btn btn--danger" data-remove-provider>Remove</button>
+      <button type="button" class="btn btn--danger" data-remove-provider>Remove this plan</button>
     </div>
 
-    <p class="form-section-title">Electricity pricing (cents)</p>
+    <p class="form-section-title">Electricity rates</p>
+    <p class="form-section-blurb">Enter rates in cents as shown on the bill or fact sheet. GST setting should match how the retailer quotes the line item.</p>
     <div class="form-row form-row--5">
       <div class="form-field">
-        <label>Daily fixed (c/day)</label>
-        <input type="number" class="prov-daily-elec" step="0.001" placeholder="0" data-calc>
+        <label>
+          Daily charge (c/day)
+          <span class="field-hint">Fixed daily fee</span>
+        </label>
+        <input type="number" class="prov-daily-elec" step="0.001" placeholder="e.g. 195" data-calc>
       </div>
       <div class="form-field">
-        <label>Import (c/kWh)</label>
-        <input type="number" class="prov-kwh-elec" step="0.001" placeholder="0" data-calc>
+        <label>
+          Import rate (c/kWh)
+          <span class="field-hint">Per kWh you buy from the grid</span>
+        </label>
+        <input type="number" class="prov-kwh-elec" step="0.001" placeholder="e.g. 28.5" data-calc>
       </div>
       <div class="form-field">
-        <label>Solar export (c/kWh)</label>
+        <label>
+          Solar buy-back (c/kWh)
+          <span class="field-hint">Credit per exported kWh; 0 if none</span>
+        </label>
         <input type="number" class="prov-kwh-export" step="0.001" placeholder="0" data-calc>
       </div>
       <div class="form-field">
-        <label>EA levy (c/unit)</label>
+        <label>
+          EA levy (c)
+          <span class="field-hint">Electricity Authority levy amount</span>
+        </label>
         <input type="number" class="prov-ea-levy-rate" step="0.001" placeholder="0" data-calc>
       </div>
       <div class="form-field">
-        <label>EA levy basis</label>
+        <label>
+          EA levy applies to
+          <span class="field-hint">How the levy is calculated</span>
+        </label>
         <select class="prov-ea-levy-type" data-calc>
-          <option value="kwh">Per import kWh</option>
-          <option value="day">Per day fixed</option>
+          <option value="kwh">Each import kWh</option>
+          <option value="day">Each day in the period</option>
         </select>
       </div>
     </div>
     <div class="form-row form-row--2">
       <div class="form-field">
-        <label>Electricity GST</label>
+        <label>
+          Electricity GST
+          <span class="field-hint">Whether rates above include 15% GST</span>
+        </label>
         <select class="prov-gst-elec" data-calc>
-          <option value="excl">GST exclusive (+15%)</option>
-          <option value="incl">GST inclusive</option>
+          <option value="excl">Exclusive — add 15%</option>
+          <option value="incl">Inclusive — already includes GST</option>
         </select>
       </div>
     </div>
 
-    <p class="form-section-title">Gas pricing (cents)</p>
+    <p class="form-section-title">Gas rates</p>
+    <p class="form-section-blurb">Same idea: cents from the gas invoice. GIC is the gas industry levy if it appears as a daily charge.</p>
     <div class="form-row form-row--4">
       <div class="form-field">
-        <label>Daily fixed (c/day)</label>
-        <input type="number" class="prov-daily-gas" step="0.001" placeholder="0" data-calc>
+        <label>
+          Daily charge (c/day)
+          <span class="field-hint">Fixed daily gas fee</span>
+        </label>
+        <input type="number" class="prov-daily-gas" step="0.001" placeholder="e.g. 145" data-calc>
       </div>
       <div class="form-field">
-        <label>Usage energy (c/kWh)</label>
-        <input type="number" class="prov-kwh-gas" step="0.001" placeholder="0" data-calc>
+        <label>
+          Energy rate (c/kWh)
+          <span class="field-hint">Variable usage charge</span>
+        </label>
+        <input type="number" class="prov-kwh-gas" step="0.001" placeholder="e.g. 12.8" data-calc>
       </div>
       <div class="form-field">
-        <label>GIC daily levy (c/day)</label>
+        <label>
+          GIC levy (c/day)
+          <span class="field-hint">Gas Industry Company levy; 0 if N/A</span>
+        </label>
         <input type="number" class="prov-gic-levy" step="0.001" placeholder="0" data-calc>
       </div>
       <div class="form-field">
-        <label>Gas GST</label>
+        <label>
+          Gas GST
+          <span class="field-hint">Whether gas rates include GST</span>
+        </label>
         <select class="prov-gst-gas" data-calc>
-          <option value="excl">GST exclusive (+15%)</option>
-          <option value="incl">GST inclusive</option>
+          <option value="excl">Exclusive — add 15%</option>
+          <option value="incl">Inclusive — already includes GST</option>
         </select>
       </div>
     </div>
 
-    <p class="form-section-title">Broadband add-on</p>
+    <p class="form-section-title">Broadband</p>
+    <p class="form-section-blurb">Flat monthly plan cost in dollars — bundled fibre, or $0 if this comparison is power/gas only.</p>
     <div class="form-row form-row--2">
       <div class="form-field">
-        <label>Monthly subscription ($)</label>
-        <input type="number" class="prov-net-monthly" step="0.01" placeholder="0" data-calc>
+        <label>
+          Monthly fee ($)
+          <span class="field-hint">Advertised plan price per month</span>
+        </label>
+        <input type="number" class="prov-net-monthly" step="0.01" placeholder="e.g. 89" data-calc>
       </div>
       <div class="form-field">
-        <label>Broadband GST</label>
+        <label>
+          Broadband GST
+          <span class="field-hint">Whether the monthly fee includes GST</span>
+        </label>
         <select class="prov-gst-net" data-calc>
-          <option value="incl">GST inclusive</option>
-          <option value="excl">GST exclusive (+15%)</option>
+          <option value="incl">Inclusive — price includes GST</option>
+          <option value="excl">Exclusive — add 15%</option>
         </select>
       </div>
     </div>
 
-    <p class="form-section-title form-section-title--danger">Bundle incentives</p>
+    <p class="form-section-title form-section-title--danger">Bundle discount</p>
+    <p class="form-section-blurb">Multi-fuel or loyalty credits in dollars — subtracted from the combined total (e.g. “$20 off when you bundle”).</p>
     <div class="form-row form-row--2">
       <div class="form-field">
-        <label>Plan discount ($)</label>
+        <label>
+          Discount amount ($)
+          <span class="field-hint">Dollar value of the incentive; 0 if none</span>
+        </label>
         <input type="number" class="prov-discount-value" step="0.01" placeholder="0" data-calc>
       </div>
       <div class="form-field">
-        <label>GST on discount</label>
+        <label>
+          Discount GST
+          <span class="field-hint">Whether the stated discount includes GST</span>
+        </label>
         <select class="prov-gst-discount" data-calc>
-          <option value="incl">GST inclusive value</option>
-          <option value="excl">GST exclusive (+15%)</option>
+          <option value="incl">Inclusive — amount includes GST</option>
+          <option value="excl">Exclusive — add 15% before deducting</option>
         </select>
       </div>
     </div>
@@ -214,7 +266,7 @@ function calculateCosts() {
     const finalCombinedSum = totalElec + totalGas + totalNet - finalDiscountDeduction;
 
     recordsList.push({
-      title: (name || plan) ? `${name}${plan ? " (" + plan + ")" : ""}` : "Unnamed profile",
+      title: (name || plan) ? `${name}${plan ? " (" + plan + ")" : ""}` : "Unnamed plan",
       elec: totalElec,
       gas: totalGas,
       net: totalNet,
@@ -234,7 +286,7 @@ function renderResults(recordsList) {
 
   if (recordsList.length === 0) {
     tbody.innerHTML =
-      '<tr><td colspan="6" class="empty-state-cell">No options configured. Click “Add provider” to begin.</td></tr>';
+      '<tr><td colspan="6" class="empty-state-cell"><strong>No plans yet.</strong> Add your usage below, then click <strong>Add plan</strong> to enter a retailer’s rates.</td></tr>';
     return;
   }
 
@@ -251,7 +303,7 @@ function renderResults(recordsList) {
     tr.innerHTML = `
       <td>
         ${escapeHtml(res.title)}
-        ${isCheapest ? '<span class="badge">Cheapest</span>' : ""}
+        ${isCheapest ? '<span class="badge">Best price</span>' : ""}
       </td>
       <td class="col-numeric">$${res.elec.toFixed(2)}</td>
       <td class="col-numeric">$${res.gas.toFixed(2)}</td>
@@ -360,7 +412,9 @@ function importData(event) {
       calculateCosts();
       event.target.value = "";
     } catch {
-      alert("Invalid configuration file structure.");
+      alert(
+        "That file doesn’t look like a saved comparison. Choose a JSON file you exported from this tool."
+      );
     }
   };
   reader.readAsText(file);

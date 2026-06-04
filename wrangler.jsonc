@@ -1,14 +1,14 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "utilities-comparison",
   "compatibility_date": "2026-05-26",
+  // Keep dashboard toggles off across deploys (defaults would re-enable *.workers.dev)
+  "workers_dev": false,
+  "preview_urls": false,
   "observability": {
     "enabled": true
   },
   "assets": {
     "directory": "."
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  }
 }
