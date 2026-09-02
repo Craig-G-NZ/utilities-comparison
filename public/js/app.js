@@ -206,6 +206,16 @@ function blockFill(block, data) {
   block.querySelector(".prov-gst-discount").value = data.gstDiscount || "incl";
 }
 
+function formatPlanTitle(name, plan) {
+  if (!name && !plan) {
+    return "Unnamed plan";
+  }
+  if (plan) {
+    return `${name} (${plan})`;
+  }
+  return name;
+}
+
 function removeBlock(id) {
   const block = document.getElementById(id);
   if (block) {
@@ -216,7 +226,7 @@ function removeBlock(id) {
 
 function resolveBroadbandCost(planNetInput, planGstNet, usageNetMonthly, usageGstNetMod) {
   if (planNetInput !== "") {
-    const planNet = parseFloat(planNetInput) || 0;
+    const planNet = Number.parseFloat(planNetInput) || 0;
     const planGstMod = planGstNet === "excl" ? GST_RATE : 1.0;
     return roundToCent(planNet * planGstMod);
   }
@@ -224,12 +234,12 @@ function resolveBroadbandCost(planNetInput, planGstNet, usageNetMonthly, usageGs
 }
 
 function calculateCosts() {
-  const daysElec = parseFloat(document.getElementById("days-elec").value) || 0;
-  const kwhElec = parseFloat(document.getElementById("kwh-elec").value) || 0;
-  const kwhExport = parseFloat(document.getElementById("kwh-export").value) || 0;
-  const daysGas = parseFloat(document.getElementById("days-gas").value) || 0;
-  const kwhGas = parseFloat(document.getElementById("kwh-gas").value) || 0;
-  const usageNetMonthly = parseFloat(document.getElementById("net-monthly-usage").value) || 0;
+  const daysElec = Number.parseFloat(document.getElementById("days-elec").value) || 0;
+  const kwhElec = Number.parseFloat(document.getElementById("kwh-elec").value) || 0;
+  const kwhExport = Number.parseFloat(document.getElementById("kwh-export").value) || 0;
+  const daysGas = Number.parseFloat(document.getElementById("days-gas").value) || 0;
+  const kwhGas = Number.parseFloat(document.getElementById("kwh-gas").value) || 0;
+  const usageNetMonthly = Number.parseFloat(document.getElementById("net-monthly-usage").value) || 0;
   const usageGstNetMod =
     document.getElementById("gst-net-usage").value === "excl" ? GST_RATE : 1.0;
 
@@ -244,10 +254,10 @@ function calculateCosts() {
     const gstGasMod = block.querySelector(".prov-gst-gas").value === "excl" ? GST_RATE : 1.0;
     const gstDiscountMod = block.querySelector(".prov-gst-discount").value === "excl" ? GST_RATE : 1.0;
 
-    const dailyElecRate = (parseFloat(block.querySelector(".prov-daily-elec").value) || 0) / 100;
-    const kwhElecRate = (parseFloat(block.querySelector(".prov-kwh-elec").value) || 0) / 100;
-    const kwhExportRate = (parseFloat(block.querySelector(".prov-kwh-export").value) || 0) / 100;
-    const eaLevyRate = (parseFloat(block.querySelector(".prov-ea-levy-rate").value) || 0) / 100;
+    const dailyElecRate = (Number.parseFloat(block.querySelector(".prov-daily-elec").value) || 0) / 100;
+    const kwhElecRate = (Number.parseFloat(block.querySelector(".prov-kwh-elec").value) || 0) / 100;
+    const kwhExportRate = (Number.parseFloat(block.querySelector(".prov-kwh-export").value) || 0) / 100;
+    const eaLevyRate = (Number.parseFloat(block.querySelector(".prov-ea-levy-rate").value) || 0) / 100;
     const eaLevyType = block.querySelector(".prov-ea-levy-type").value;
 
     const lineElecDaily = roundToCent(dailyElecRate * daysElec);
@@ -259,9 +269,9 @@ function calculateCosts() {
     const lineSolarCredit = roundToCent(kwhExportRate * kwhExport);
     totalElec -= lineSolarCredit;
 
-    const dailyGasRate = (parseFloat(block.querySelector(".prov-daily-gas").value) || 0) / 100;
-    const kwhGasRate = (parseFloat(block.querySelector(".prov-kwh-gas").value) || 0) / 100;
-    const gicLevyRate = (parseFloat(block.querySelector(".prov-gic-levy").value) || 0) / 100;
+    const dailyGasRate = (Number.parseFloat(block.querySelector(".prov-daily-gas").value) || 0) / 100;
+    const kwhGasRate = (Number.parseFloat(block.querySelector(".prov-kwh-gas").value) || 0) / 100;
+    const gicLevyRate = (Number.parseFloat(block.querySelector(".prov-gic-levy").value) || 0) / 100;
 
     const lineGasDaily = roundToCent(dailyGasRate * daysGas);
     const lineGasUsage = roundToCent(kwhGasRate * kwhGas);
@@ -278,12 +288,12 @@ function calculateCosts() {
       usageGstNetMod
     );
 
-    const rawDiscountValue = parseFloat(block.querySelector(".prov-discount-value").value) || 0;
+    const rawDiscountValue = Number.parseFloat(block.querySelector(".prov-discount-value").value) || 0;
     const finalDiscountDeduction = roundToCent(rawDiscountValue * gstDiscountMod);
     const finalCombinedSum = totalElec + totalGas + totalNet - finalDiscountDeduction;
 
     recordsList.push({
-      title: (name || plan) ? `${name}${plan ? " (" + plan + ")" : ""}` : "Unnamed plan",
+      title: formatPlanTitle(name, plan),
       elec: totalElec,
       gas: totalGas,
       net: totalNet,
@@ -401,44 +411,40 @@ function exportData() {
   a.download = `utility-config-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
+  a.remove();
   URL.revokeObjectURL(url);
 }
 
-function importData(event) {
+async function importData(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    try {
-      const data = JSON.parse(e.target.result);
+  try {
+    const data = JSON.parse(await file.text());
 
-      if (data.usage) {
-        document.getElementById("days-elec").value = data.usage.daysElec || "";
-        document.getElementById("kwh-elec").value = data.usage.kwhElec || "";
-        document.getElementById("kwh-export").value = data.usage.kwhExport || "";
-        document.getElementById("days-gas").value = data.usage.daysGas || "";
-        document.getElementById("kwh-gas").value = data.usage.kwhGas || "";
-        document.getElementById("net-monthly-usage").value = data.usage.netMonthly || "";
-        document.getElementById("gst-net-usage").value = data.usage.gstNet || "incl";
-      }
-
-      document.getElementById("providers-container").innerHTML = "";
-
-      if (Array.isArray(data.providers)) {
-        data.providers.forEach((pData) => addProviderBlock(pData));
-      }
-
-      calculateCosts();
-      event.target.value = "";
-    } catch {
-      alert(
-        "That file doesn’t look like a saved comparison. Choose a JSON file you exported from this tool."
-      );
+    if (data.usage) {
+      document.getElementById("days-elec").value = data.usage.daysElec || "";
+      document.getElementById("kwh-elec").value = data.usage.kwhElec || "";
+      document.getElementById("kwh-export").value = data.usage.kwhExport || "";
+      document.getElementById("days-gas").value = data.usage.daysGas || "";
+      document.getElementById("kwh-gas").value = data.usage.kwhGas || "";
+      document.getElementById("net-monthly-usage").value = data.usage.netMonthly || "";
+      document.getElementById("gst-net-usage").value = data.usage.gstNet || "incl";
     }
-  };
-  reader.readAsText(file);
+
+    document.getElementById("providers-container").innerHTML = "";
+
+    if (Array.isArray(data.providers)) {
+      data.providers.forEach((pData) => addProviderBlock(pData));
+    }
+
+    calculateCosts();
+    event.target.value = "";
+  } catch {
+    alert(
+      "That file doesn’t look like a saved comparison. Choose a JSON file you exported from this tool."
+    );
+  }
 }
 
 function init() {
