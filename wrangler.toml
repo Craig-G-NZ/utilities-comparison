@@ -1,0 +1,33 @@
+name = "utilities-comparison"
+main = "worker/index.js"
+compatibility_date = "2026-05-26"
+
+# Only serve on custom domain routes — never on *.workers.dev or preview URLs
+workers_dev = false
+preview_urls = false
+
+[assets]
+directory = "."
+binding = "ASSETS"
+# Every request hits the Worker so the canonical-host check covers HTML, CSS, and JS.
+# This app has no /api routes, so asset-first routing would skip the check.
+run_worker_first = true
+not_found_handling = "single-page-application"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+
+[observability.traces]
+enabled = true
+
+# Public site URL — only this host is accepted
+[vars]
+CANONICAL_HOST = "compare.gillfamily.co.nz"
+
+# Workers custom domain (not a zone route pattern)
+[[routes]]
+pattern = "compare.gillfamily.co.nz"
+custom_domain = true

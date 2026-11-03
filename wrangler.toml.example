@@ -1,0 +1,28 @@
+name = "utilities-comparison"
+main = "worker/index.js"
+compatibility_date = "2026-05-26"
+
+workers_dev = false
+preview_urls = false
+
+[assets]
+directory = "."
+binding = "ASSETS"
+run_worker_first = true
+not_found_handling = "single-page-application"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+
+[observability.traces]
+enabled = true
+
+[vars]
+CANONICAL_HOST = "compare.example.com"
+
+[[routes]]
+pattern = "compare.example.com"
+custom_domain = true
